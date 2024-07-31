@@ -26,14 +26,22 @@ class Band:
         else:
             raise ValueError("Hometown must be a non-empty string")
 
+    def add_concert(self, concert):
+        if concert not in self._concerts:
+            self._concerts.append(concert)
+
     def concerts(self):
         return self._concerts
 
-    def add_concert(self, concert):
-        self._concerts.append(concert)
-
     def venues(self):
         return list({concert.venue for concert in self._concerts})
+
+    def introductions(self):
+        return [concert.introduction() for concert in self._concerts]
+
+    def play_in_venue(self, venue):
+        return [concert for concert in self._concerts if concert.venue == venue]
+
 
 class Concert:
     def __init__(self, date, band, venue):
@@ -76,6 +84,13 @@ class Concert:
         else:
             raise ValueError("Venue must be an instance of Venue")
 
+    def is_in_hometown(self):
+        return self.band.hometown == self.venue.city
+
+    def introduction(self):
+        return f"{self.band.name} is performing at {self.venue.name} on {self.date}"
+
+
 class Venue:
     def __init__(self, name, city):
         self.name = name
@@ -104,11 +119,12 @@ class Venue:
         else:
             raise ValueError("City must be a non-empty string")
 
+    def add_concert(self, concert):
+        if concert not in self._concerts:
+            self._concerts.append(concert)
+
     def concerts(self):
         return self._concerts
-
-    def add_concert(self, concert):
-        self._concerts.append(concert)
 
     def bands(self):
         return list({concert.band for concert in self._concerts})
